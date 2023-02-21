@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class AgentGenerator : MonoBehaviour
 {
@@ -33,21 +33,23 @@ public class AgentGenerator : MonoBehaviour
         { 5, new Color(0.88f, 0.68f, 0.64f) }
     };
 
+    private const int MAX_ROW = 3;
+    private bool processDone = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        GenerateAgents();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    private Color GetRandomColour()
-    {
-        return new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
+        if (Input.GetKeyDown(KeyCode.Space) && !processDone)
+        {
+            processDone = true;
+            GenerateAgents();
+        }
     }
 
     private Color GetRandomHairColour()
@@ -62,12 +64,20 @@ public class AgentGenerator : MonoBehaviour
 
     private void GenerateAgents()
     {
-        Vector3 startPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        Vector3 startPosition = Vector3.zero;
         
         for (int i = 0; i < _numberOfClusters; i++)
         {
             GenerateCluster(ref startPosition, i);
-            startPosition += Vector3.left * 8.0f;
+
+            if ((i + 1) % 3 == 0)
+            {
+                startPosition = Vector3.zero + (Vector3.forward * 10.0f) * (i + 1) / MAX_ROW;
+            }
+            else
+            {
+                startPosition += Vector3.right * 10.0f;
+            }
         }
     }
 
@@ -81,25 +91,28 @@ public class AgentGenerator : MonoBehaviour
 
         cluster.name = "Cluster " + (index + 1);
 
-        float clusterRadius = (2.0f * numberOfAgents) / (2 * Mathf.PI);
-        Vector3 pointerVector = new Vector3(clusterRadius, 0.0f, 0.0f);
-        float clusterRotation = 360 / numberOfAgents;
+        FillClusterWithAgents(cluster.GetComponent<Cluster>(), numberOfAgents);
 
-        Color clusterColour = GetRandomColour();
+        return cluster;
+    }
+
+    private void FillClusterWithAgents(Cluster cluster, int numberOfAgents)
+    {
+        float clusterRadius = (2.0f * numberOfAgents) / (2 * Mathf.PI);
+        Vector3 radiusVector = new Vector3(clusterRadius, 0.0f, 0.0f);
+        float clusterSegmentInDegrees = 360 / numberOfAgents;
 
         for (int i = 0; i < numberOfAgents; i++)
         {
-            Vector3 agentPosition = (Quaternion.Euler(0, clusterRotation * i, 0) * pointerVector) + clusterPosition;
+            Vector3 agentPosition = (Quaternion.Euler(0, clusterSegmentInDegrees * i, 0) * radiusVector) + cluster.transform.position;
             GameObject agent = Instantiate(_agentTemplate, agentPosition, Quaternion.identity, cluster.transform);
-            agent.GetComponent<Agent>().InitAgent(GetRandomHairColour(), GetRandomSkinColour(), clusterColour);
-            agent.transform.LookAt(clusterPosition, Vector3.up);
-            agent.name = "Agent no."+(i + 1);
+            agent.GetComponent<Agent>().InitAgent(GetRandomHairColour(), GetRandomSkinColour(), cluster._clusterColour);
+            agent.transform.LookAt(cluster.transform.position, Vector3.up);
+            agent.name = "Agent no." + (i + 1);
 
-            cluster.GetComponent<Cluster>().RegisterMember(agent);
+            cluster.RegisterMember(agent.GetComponent<Agent>());
         }
 
-        cluster.GetComponent<Cluster>().GenerateConnections();
-
-        return cluster;
+        cluster.GenerateConnections();
     }
 }

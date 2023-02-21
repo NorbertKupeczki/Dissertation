@@ -1,11 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Utility.Utility;
 
 public class Cluster : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _members = new List<GameObject>();
+    [SerializeField] private List<Agent> _members = new List<Agent>();
     [SerializeField] private List<ContactPairs> _contacts = new List<ContactPairs>();
+    [SerializeField] public Color _clusterColour { get; private set; }
+    
+    private void Awake()
+    {
+        _clusterColour = GetRandomColour();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +34,7 @@ public class Cluster : MonoBehaviour
     /// if the list doesn't already contain the member.
     /// </summary>
     /// <param name="newMember"></param>
-    public void RegisterMember(GameObject newMember)
+    public void RegisterMember(Agent newMember)
     {
         if(!_members.Contains(newMember))
         {
@@ -63,8 +70,8 @@ public class Cluster : MonoBehaviour
 
     private struct ContactPairs
     {
-        public GameObject firstContact;
-        public GameObject secondContact;
+        public Agent firstContact;
+        public Agent secondContact;
 
         public void DrawConnectionLine()
         {

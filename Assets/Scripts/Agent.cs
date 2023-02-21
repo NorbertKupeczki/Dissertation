@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
-    [Header ("Body parts")]
+    [Header("Body parts")]
     [SerializeField] private GameObject _hair;
     [SerializeField] private GameObject _skin;
     [SerializeField] private GameObject _body;
@@ -13,13 +14,24 @@ public class Agent : MonoBehaviour
 
     [Header("Attributes")]
     [SerializeField] private Gender _gender = Gender.UNDEFINED;
-    [SerializeField] private List<GameObject> _contacts = new List<GameObject>();
+    [SerializeField] private List<Agent> _contacts = new List<Agent>();
 
-    private enum Gender
+    private Dictionary<Agent, int> _contactRelations = new Dictionary<Agent, int>();
+
+    public enum Gender
     {
         UNDEFINED = 0,
         MALE = 1,
         FEMALE = 2
+    }
+
+    /// <summary>
+    /// Gets the agent's gender
+    /// </summary>
+    /// <returns>Returns the agent's gender</returns>
+    public Gender GetGender()
+    {
+        return _gender;
     }
 
     private void Awake()
@@ -64,7 +76,7 @@ public class Agent : MonoBehaviour
 
     private Gender GetRandomSex()
     {
-        return (Gender)Random.Range(1, 3);
+        return (Gender)UnityEngine.Random.Range(1, Enum.GetNames(typeof(Gender)).Length);
     }
 
     /// <summary>
@@ -72,7 +84,7 @@ public class Agent : MonoBehaviour
     /// </summary>
     /// <param name="contact"></param>
     /// <returns>Returns true if the contact is found</returns>
-    public bool CheckContact(GameObject contact)
+    public bool CheckContact(Agent contact)
     {
         return _contacts.Contains(contact);
     }
@@ -82,11 +94,95 @@ public class Agent : MonoBehaviour
     /// contains the contact.
     /// </summary>
     /// <param name="newContact"></param>
-    public void RegisterContact(GameObject newContact)
+    public bool RegisterContact(Agent newContact)
     {
         if (!CheckContact(newContact))
         {
             _contacts.Add(newContact);
+            _contactRelations.Add(newContact, 50);
+            return true;
         }
+        return false;
+    }
+
+    /// <summary>
+    /// Removes a contact from the agent's list of contacts.
+    /// </summary>
+    /// <param name="contact"></param>
+    /// <returns>Returns true if the removal of contact was successful</returns>
+    public bool RemoveContact(Agent contact)
+    {
+        if (_contacts.Contains(contact))
+        {
+            _contacts.Remove(contact);
+            _contactRelations.Remove(contact);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds the value to the contact's relationship value
+    /// </summary>
+    /// <param name="contact"></param>
+    /// <param name="value"></param>
+    public void ChangeRelationWithContact(Agent contact, int value)
+    {
+        if (!_contacts.Contains(contact))
+        {
+            return;
+        }
+
+        if (_contactRelations[contact] + value < 0)
+        {
+            _contactRelations[contact] = 0;
+        }
+        else if (_contactRelations[contact] + value > 100)
+        {
+            _contactRelations[contact] = 100;
+        }
+        else
+        {
+            _contactRelations[contact] += value;
+        }
+    }
+
+    /// <summary>
+    /// Checks the relationship score with another agent
+    /// </summary>
+    /// <param name="contact"></param>
+    /// <returns>Returns a value between 0 and 100, returns -1 if the contact is unknown</returns>
+    public int CheckRelationWithContact(Agent contact)
+    {
+        if (_contacts.Contains(contact))
+        {
+            return _contactRelations[contact];
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// Searches for the agent with the highest relationship score
+    /// </summary>
+    /// <returns>Returns the agent with the highest relationshio score, returns null if the dictionary is empty</returns>
+    private Agent FindHighestRelationContact()
+    {
+        if (_contactRelations.Count < 1)
+        {
+            return null;
+        }
+
+        int relationScore = 101;
+        Agent bestContact = null;
+
+        foreach (KeyValuePair<Agent, int> contact in _contactRelations)
+        {
+            if (contact.Value < relationScore)
+            {
+                bestContact = contact.Key;
+            }
+        }
+
+        return bestContact;
     }
 }
