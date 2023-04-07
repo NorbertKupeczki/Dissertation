@@ -29,6 +29,11 @@ public class Cluster : MonoBehaviour
         }
     }
 
+    public List<Agent> GetMembersList()
+    {
+        return _members;
+    }
+
     /// <summary>
     /// Adds a new member to the list of cluster members
     /// if the list doesn't already contain the member.
@@ -95,5 +100,10 @@ public class Cluster : MonoBehaviour
             firstContact = _members[x],
             secondContact = _members[y]
         });
+
+        int relationScore = Random.Range(0, 100);
+
+        _members[x].RegisterContact(_members[y], relationScore);
+        _members[y].RegisterContact(_members[x], relationScore);
     }
 }

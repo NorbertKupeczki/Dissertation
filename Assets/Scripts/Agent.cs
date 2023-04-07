@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Utility.Utility;
 
 public class Agent : MonoBehaviour
 {
@@ -14,51 +14,35 @@ public class Agent : MonoBehaviour
 
     [Header("Attributes")]
     [SerializeField] private Gender _gender = Gender.UNDEFINED;
-    [SerializeField] private List<Agent> _contacts = new List<Agent>();
+    [SerializeField] private List<Agent> _contacts = new ();
 
-    private Dictionary<Agent, int> _contactRelations = new Dictionary<Agent, int>();
+    [Header("Relation to player")]
+    [SerializeField] private int _relationToPlayer;
 
-    public enum Gender
-    {
-        UNDEFINED = 0,
-        MALE = 1,
-        FEMALE = 2
-    }
+    private Personality _personality = null;
+    private Dictionary<Agent, int> _contactRelations = new();
 
     /// <summary>
     /// Gets the agent's gender
     /// </summary>
     /// <returns>Returns the agent's gender</returns>
-    public Gender GetGender()
-    {
-        return _gender;
-    }
+    public Gender GetGender() => _gender;
 
     private void Awake()
     {
         _gender = GetRandomSex();
         if (_gender == Gender.MALE)
         {
-            _hair = Instantiate(_maleHairObj,_skin.transform.position, Quaternion.Euler(-90.0f,0.0f,0.0f), gameObject.transform);
+            _hair = Instantiate(_maleHairObj, _skin.transform.position, Quaternion.Euler(s_blenderRotation), gameObject.transform);
         }
         else
         {
-            _hair = Instantiate(_femaleHairObj, _skin.transform.position, Quaternion.Euler(-90.0f, 0.0f, 0.0f), gameObject.transform);
+            _hair = Instantiate(_femaleHairObj, _skin.transform.position, Quaternion.Euler(s_blenderRotation), gameObject.transform);
         }
 
         _hair.name = "Hair";
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        _personality = new Personality();
     }
 
     /// <summary>
@@ -72,11 +56,6 @@ public class Agent : MonoBehaviour
         _hair.GetComponent<Renderer>().material.color = hairColour;
         _skin.GetComponent<Renderer>().material.color = skinColour;
         _body.GetComponent<Renderer>().material.color = bodyColour;
-    }
-
-    private Gender GetRandomSex()
-    {
-        return (Gender)UnityEngine.Random.Range(1, Enum.GetNames(typeof(Gender)).Length);
     }
 
     /// <summary>
@@ -94,12 +73,14 @@ public class Agent : MonoBehaviour
     /// contains the contact.
     /// </summary>
     /// <param name="newContact"></param>
-    public bool RegisterContact(Agent newContact)
+    public bool RegisterContact(Agent newContact, int relationValue)
     {
         if (!CheckContact(newContact))
         {
             _contacts.Add(newContact);
-            _contactRelations.Add(newContact, 50);
+            _contactRelations.Add(newContact, relationValue);
+
+            SortContacts();
             return true;
         }
         return false;
@@ -116,6 +97,8 @@ public class Agent : MonoBehaviour
         {
             _contacts.Remove(contact);
             _contactRelations.Remove(contact);
+
+            SortContacts();
             return true;
         }
         return false;
@@ -145,6 +128,8 @@ public class Agent : MonoBehaviour
         {
             _contactRelations[contact] += value;
         }
+
+        SortContacts();
     }
 
     /// <summary>
@@ -162,27 +147,53 @@ public class Agent : MonoBehaviour
     }
 
     /// <summary>
-    /// Searches for the agent with the highest relationship score
+    /// Sorts the contacts in a descending order based on the relationship scores
     /// </summary>
-    /// <returns>Returns the agent with the highest relationshio score, returns null if the dictionary is empty</returns>
-    private Agent FindHighestRelationContact()
+    private void SortContacts()
     {
-        if (_contactRelations.Count < 1)
+        if (_contactRelations.Count < 2)
         {
-            return null;
+            return;
         }
 
-        int relationScore = 101;
-        Agent bestContact = null;
-
-        foreach (KeyValuePair<Agent, int> contact in _contactRelations)
+        _contacts.Sort(delegate (Agent a, Agent b)
         {
-            if (contact.Value < relationScore)
-            {
-                bestContact = contact.Key;
-            }
-        }
+            return (_contactRelations[b].CompareTo(_contactRelations[a]));
+        });
+    }
 
-        return bestContact;
+    /// <summary>
+    /// Returns the agent's list of contacts
+    /// </summary>
+    /// <returns></returns>
+    public List<Agent> GetContacList()
+    {
+        return _contacts;
+    }
+
+    /// <summary>
+    /// Returns the contact with the highest relationship value
+    /// </summary>
+    /// <returns>Returns null if the agent has no contacts</returns>
+    public Agent GetBestContact()
+    {
+        if (_contacts.Count > 1)
+        {
+            return _contacts[0];
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Returns the contact with the lowest relationship value
+    /// </summary>
+    /// <returns>Returns null if the agent has no contacts</returns>
+    public Agent GetWorstContact()
+    {
+        if (_contacts.Count > 1)
+        {
+            return _contacts[^1];
+        }
+        return null;
     }
 }
