@@ -26,7 +26,17 @@ public class Agent : MonoBehaviour
     /// Gets the agent's gender
     /// </summary>
     /// <returns>Returns the agent's gender</returns>
-    public Gender GetGender() => _gender;
+    public Gender GetGender => _gender;
+
+    /// <summary>
+    /// Gets the agent's relationship with the player
+    /// </summary>
+    public int RelationToPlayer => _relationToPlayer;
+    
+    /// <summary>
+    /// Accesses the class storing the agent's personality data
+    /// </summary>
+    public Personality Personality => _personality;
 
     private void Awake()
     {
@@ -43,6 +53,11 @@ public class Agent : MonoBehaviour
         _hair.name = "Hair";
 
         _personality = new Personality();
+    }
+
+    private void Start()
+    {
+        _relationToPlayer = GetRandomTrait();
     }
 
     /// <summary>

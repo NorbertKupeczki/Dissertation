@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Utility
 {
-    public static class Utility
+    public class Utility
     {
         public static Vector3 s_blenderRotation = new(-90.0f, 0.0f, 0.0f);
 
@@ -42,16 +42,6 @@ namespace Utility
         }
 
         /// <summary>
-        /// Rolls an imaginary dice that has faces equal to the provided parameter and returns the result.
-        /// </summary>
-        /// <param name="diceFaces"></param>
-        /// <returns>Int</returns>
-        public static int RollADice(int diceFaces)
-        {
-            return Random.Range(0, diceFaces) + 1;
-        }
-
-        /// <summary>
         /// Generates a random Gender
         /// </summary>
         public static Gender GetRandomSex()
@@ -68,6 +58,37 @@ namespace Utility
         {
             return _skinColours[Random.Range(0, _skinColours.Count)];
         }
+        
+        /// <summary>
+        /// Generates a a trait value between 0 and 100 (Gaussian distribution)
+        /// </summary>
+        /// <returns>Int</returns>
+        public static int GetRandomTrait()
+        {
+            return (RollADice(5) + RollADice(5)) * 10 + RollADice(10);
+        }
+
+        /// <summary>
+        /// Rolls an imaginary dice that has n+1 faces with a max value provided as a parameter,
+        /// generating an integer between 0 and the maximum value.
+        /// </summary>
+        /// <param name="faces"></param>
+        /// <returns>Int</returns>
+        public static int RollADice(int maxValue)
+        {
+            return Random.Range(0, maxValue + 1);
+        }
+
+        /// <summary>
+        /// Rolls an imaginary dice that has faces equal to the provided parameter, generating an integer result
+        /// between 1 and the parameter.
+        /// </summary>
+        /// <param name="diceFaces"></param>
+        /// <returns>Int</returns>
+        public static int RollARealDice(int diceFaces)
+        {
+            return Random.Range(0, diceFaces) + 1;
+        }
+
     }
 }
-

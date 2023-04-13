@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4177159712813499867}
   - component: {fileID: 4177159712813499428}
   - component: {fileID: 4177159712813499429}
-  - component: {fileID: 4177159712813499866}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -84,20 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &4177159712813499866
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4177159712813499864}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4177159712880441163
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4177159712880441173}
   - component: {fileID: 4177159712880441162}
+  - component: {fileID: 1856814117717947765}
   m_Layer: 0
   m_Name: AgentPrefab
   m_TagString: Untagged
@@ -151,7 +137,23 @@ MonoBehaviour:
     type: 3}
   _femaleHairObj: {fileID: 7239627135942491084, guid: 30921569e8397d14f993eceed0670d83,
     type: 3}
-  _sex: 0
+  _gender: 0
+  _contacts: []
+  _relationToPlayer: 0
+--- !u!136 &1856814117717947765
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4177159712880441163}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 3
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &4177159713390754717
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,7 +165,6 @@ GameObject:
   - component: {fileID: 4177159713390754716}
   - component: {fileID: 4177159713390754713}
   - component: {fileID: 4177159713390754718}
-  - component: {fileID: 4177159713390754719}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -236,16 +237,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4177159713390754719
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4177159713390754717}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
