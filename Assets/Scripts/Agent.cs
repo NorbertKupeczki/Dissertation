@@ -18,6 +18,10 @@ public class Agent : MonoBehaviour
 
     [Header("Relation to player")]
     [SerializeField] private int _relationToPlayer;
+    [SerializeField] private RelationLine _relationLinePrefab;
+
+    private List<RelationLine> _relationLines = new();
+    private bool _relationLinesOn = false;
 
     private Personality _personality = null;
     private Dictionary<Agent, int> _contactRelations = new();
@@ -58,6 +62,9 @@ public class Agent : MonoBehaviour
     private void Start()
     {
         _relationToPlayer = GetRandomTrait();
+
+        EventManager.AgentSelected += EnableRelationLines;
+        EventManager.Deselect += DisableRelationLines;
     }
 
     /// <summary>
@@ -95,6 +102,11 @@ public class Agent : MonoBehaviour
             _contacts.Add(newContact);
             _contactRelations.Add(newContact, relationValue);
 
+            RelationLine newLine = Instantiate(_relationLinePrefab, gameObject.transform);
+            newLine.SetLineEnd(newContact.transform);
+            newLine.SetLineStart(gameObject.transform);
+            _relationLines.Add(newLine);
+            
             SortContacts();
             return true;
         }
@@ -112,6 +124,8 @@ public class Agent : MonoBehaviour
         {
             _contacts.Remove(contact);
             _contactRelations.Remove(contact);
+
+            //Todo: Add removal of relationship line!
 
             SortContacts();
             return true;
@@ -181,7 +195,7 @@ public class Agent : MonoBehaviour
     /// Returns the agent's list of contacts
     /// </summary>
     /// <returns></returns>
-    public List<Agent> GetContacList()
+    public List<Agent> GetContactList()
     {
         return _contacts;
     }
@@ -210,5 +224,27 @@ public class Agent : MonoBehaviour
             return _contacts[^1];
         }
         return null;
+    }
+
+    private void EnableRelationLines(Agent agent)
+    {
+        if (agent != this) return;
+        ToggleRelationLines(true);
+        _relationLinesOn = true;
+    }
+
+    private void DisableRelationLines()
+    {
+        if (!_relationLinesOn) return;
+        ToggleRelationLines(false);
+        _relationLinesOn = false;
+    }
+
+    private void ToggleRelationLines(bool value)
+    {
+        foreach (RelationLine line in _relationLines)
+        {
+            line.ToggleLine(value);
+        }
     }
 }

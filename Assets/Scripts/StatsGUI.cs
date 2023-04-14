@@ -16,6 +16,8 @@ public class StatsGUI : MonoBehaviour
     private PlayerRelationUpdate _playerRelationUpdateFunc;
     private Coroutine _playerRelationCoroutine;
 
+    private Agent _selectedAgent;
+
     private void Awake()
     {
         TurnPanelOff();
@@ -37,6 +39,7 @@ public class StatsGUI : MonoBehaviour
     private void DisplaySelectedAgentStats(Agent agent)
     {
         Personality personality = agent.Personality;
+        _selectedAgent = agent;
         TogglePanel(true);
         StartPlayerRelationUpdate(agent);
 
@@ -70,6 +73,7 @@ public class StatsGUI : MonoBehaviour
     private void TogglePanel(bool value)
     {
         _panel.SetActive(value);
+        if (!value) _selectedAgent = null;
     }
 
     private void StartPlayerRelationUpdate(Agent agent)

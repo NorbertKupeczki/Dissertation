@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4177159712813499867}
   - component: {fileID: 4177159712813499428}
   - component: {fileID: 4177159712813499429}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4177159712880441173}
   - component: {fileID: 4177159712880441162}
   - component: {fileID: 1856814117717947765}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AgentPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,6 +140,8 @@ MonoBehaviour:
   _gender: 0
   _contacts: []
   _relationToPlayer: 0
+  _relationLinePrefab: {fileID: 5734778417357331186, guid: 04f526727fad81a46ac646164c3034c5,
+    type: 3}
 --- !u!136 &1856814117717947765
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -165,7 +167,7 @@ GameObject:
   - component: {fileID: 4177159713390754716}
   - component: {fileID: 4177159713390754713}
   - component: {fileID: 4177159713390754718}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
