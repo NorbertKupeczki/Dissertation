@@ -1,13 +1,31 @@
 using System.Collections.Generic;
+using GeneralData;
 using UnityEngine;
 
 public class AreaEffector : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
+        SubscribeEvents();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
         EventManager.Move += Move;
-        EventManager.AreaEffect1 += ApplyEffectOnAgents;
+        EventManager.PositiveAreaEffect += ApplyPositiveAreaEffect;
+        EventManager.NegativeAreaEffect += ApplyNegativeAreaEffect;
+    }
+
+    private void UnsubscribeEvents()
+    {
+        EventManager.Move -= Move;
+        EventManager.PositiveAreaEffect -= ApplyPositiveAreaEffect;
+        EventManager.NegativeAreaEffect -= ApplyNegativeAreaEffect;
     }
 
     public void Move(Vector3 position)
@@ -17,7 +35,7 @@ public class AreaEffector : MonoBehaviour
 
     private List<Agent> GetAgentsInArea()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, 4.0f, LayerMask.GetMask("Agent"));
+        Collider[] hits = Physics.OverlapSphere(transform.position, Data.AOE_DETECTION_RADIUS, LayerMask.GetMask("Agent"));
         if (hits.Length < 1) return null;
         List<Agent> agentsHit = new(hits.Length);
         foreach (Collider hit in hits)
@@ -28,13 +46,25 @@ public class AreaEffector : MonoBehaviour
         return agentsHit;
     }
 
-    private void ApplyEffectOnAgents()
+    private void ApplyPositiveAreaEffect()
     {
         List<Agent> agents = GetAgentsInArea();
         if(agents == null) return;
         foreach (Agent agent in agents)
         {
-            Debug.Log(agent.gameObject.name);
+            Debug.Log($"Applying area effect 1: {agent.gameObject.name}");
+            //Todo: Apply area effect 1 here
+        }
+    }
+
+    private void ApplyNegativeAreaEffect()
+    {
+        List<Agent> agents = GetAgentsInArea();
+        if (agents == null) return;
+        foreach (Agent agent in agents)
+        {
+            Debug.Log($"Applying area effect 2: {agent.gameObject.name}");
+            //Todo: Apply area effect 2 here
         }
     }
 }

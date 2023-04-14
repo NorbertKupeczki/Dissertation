@@ -6,7 +6,8 @@ public static class EventManager
     public static event Action<Agent> AgentSelected;
     public static event Action Deselect;
     public static event Action<Vector3> Move;
-    public static event Action AreaEffect1;
+    public static event Action PositiveAreaEffect;
+    public static event Action NegativeAreaEffect;
 
     public static void OnAgentSelected(Agent agent)
     {
@@ -23,8 +24,12 @@ public static class EventManager
         Move?.Invoke(position);
     }
 
-    public static void OnAreaEffect1()
+    public static void OnPositiveAreaEffect()
     {
-        AreaEffect1?.Invoke();
+        PositiveAreaEffect?.Invoke();
+    }
+    public static void OnNegativeAreaEffect()
+    {
+        NegativeAreaEffect?.Invoke();
     }
 }

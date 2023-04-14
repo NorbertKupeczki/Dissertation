@@ -26,11 +26,21 @@ public class StatsGUI : MonoBehaviour
 
     private void Start()
     {
+        SubscribeEvents();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
         EventManager.AgentSelected += DisplaySelectedAgentStats;
         EventManager.Deselect += TurnPanelOff;
     }
 
-    private void OnDestroy()
+    private void UnsubscribeEvents()
     {
         EventManager.AgentSelected -= DisplaySelectedAgentStats;
         EventManager.Deselect -= TurnPanelOff;

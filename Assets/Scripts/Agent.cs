@@ -63,8 +63,24 @@ public class Agent : MonoBehaviour
     {
         _relationToPlayer = GetRandomTrait();
 
+        SubscribeEvents();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
         EventManager.AgentSelected += EnableRelationLines;
         EventManager.Deselect += DisableRelationLines;
+    }
+
+    private void UnsubscribeEvents()
+    {
+        EventManager.AgentSelected -= EnableRelationLines;
+        EventManager.Deselect -= DisableRelationLines;
     }
 
     /// <summary>

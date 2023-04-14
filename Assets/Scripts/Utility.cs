@@ -49,11 +49,19 @@ namespace Utility
             return (Gender)Random.Range(1, Enum.GetNames(typeof(Gender)).Length);
         }
 
+        /// <summary>
+        /// Generates a random color from the hair colours dictionary.
+        /// </summary>
+        /// <returns></returns>
         public static Color GetRandomHairColour()
         {
             return _hairColours[Random.Range(0, _hairColours.Count)];
         }
 
+        /// <summary>
+        /// Generates a random color from the skin colours dictionary.
+        /// </summary>
+        /// <returns></returns>
         public static Color GetRandomSkinColour()
         {
             return _skinColours[Random.Range(0, _skinColours.Count)];

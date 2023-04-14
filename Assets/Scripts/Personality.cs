@@ -1,5 +1,3 @@
-using UnityEngine;
-using GeneralData;
 using static Utility.Utility;
 
 public class Personality

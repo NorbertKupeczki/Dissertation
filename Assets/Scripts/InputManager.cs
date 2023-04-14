@@ -17,9 +17,11 @@ public class InputManager : MonoBehaviour
     {
         PointerEventData eventData = new(EventSystem.current);
 
+        // If the mouse cursor is above a UI element at the time of click.
         if (IsMouseOverUi(eventData)) return;
 
-        if (Input.GetMouseButtonDown(Data.LEFT_MOUSE_BUTTON))
+        // Left mouse click
+        if (Input.GetMouseButtonDown(InputData.LEFT_MOUSE_BUTTON))
         {   
             Agent agent = CheckAgentClicked(eventData);
             if (agent == null || _selectedAgent == agent) return;
@@ -27,11 +29,13 @@ public class InputManager : MonoBehaviour
             EventManager.OnAgentSelected(agent);
             _selectedAgent = agent;
         }
-        else if (Input.GetMouseButtonDown(Data.RIGHT_MOUSE_BUTTON))
+        // Right mouse click
+        else if (Input.GetMouseButtonDown(InputData.RIGHT_MOUSE_BUTTON))
         {
             EventManager.OnDeselect();
         }
-        else if (Input.GetMouseButtonDown(Data.MIDDLE_MOUSE_BUTTON))
+        // Middle mouse click
+        else if (Input.GetMouseButtonDown(InputData.MIDDLE_MOUSE_BUTTON))
         {
             if (CheckGroundHit(eventData, out Vector3 result))
             {
@@ -47,9 +51,14 @@ public class InputManager : MonoBehaviour
             EventManager.OnDeselect();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            EventManager.OnAreaEffect1();
+            EventManager.OnPositiveAreaEffect();
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            EventManager.OnNegativeAreaEffect();
         }
     }
 
@@ -64,9 +73,9 @@ public class InputManager : MonoBehaviour
 
     private static bool AnyMouseButtonClicked()
     {
-        return Input.GetMouseButtonDown(Data.LEFT_MOUSE_BUTTON) || 
-               Input.GetMouseButtonDown(Data.RIGHT_MOUSE_BUTTON) || 
-               Input.GetMouseButtonDown(Data.MIDDLE_MOUSE_BUTTON);
+        return Input.GetMouseButtonDown(InputData.LEFT_MOUSE_BUTTON) || 
+               Input.GetMouseButtonDown(InputData.RIGHT_MOUSE_BUTTON) || 
+               Input.GetMouseButtonDown(InputData.MIDDLE_MOUSE_BUTTON);
     }
 
     private static Agent CheckAgentClicked(PointerEventData eventData)
