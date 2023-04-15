@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GeneralData;
 using UnityEngine;
 using static Utility.Utility;
 
@@ -19,6 +20,10 @@ public class Agent : MonoBehaviour
     [Header("Relation to player")]
     [SerializeField] private int _relationToPlayer;
     [SerializeField] private RelationLine _relationLinePrefab;
+
+    [Header("Particle Systems")]
+    [SerializeField] private ParticleController _positiveEffect;
+    [SerializeField] private ParticleController _negativeEffect;
 
     private List<RelationLine> _relationLines = new();
     private bool _relationLinesOn = false;
@@ -261,6 +266,44 @@ public class Agent : MonoBehaviour
         foreach (RelationLine line in _relationLines)
         {
             line.ToggleLine(value);
+        }
+    }
+
+    public void RelationChangeTest(int value)
+    {
+        if (value > 0) PlayPositiveParticleEffect(EffectImpact.HIGH_IMPACT);
+        else if (value < 0) PlayNegativeParticleEffect(EffectImpact.HIGH_IMPACT);
+    }
+
+    private void PlayPositiveParticleEffect(EffectImpact impact)
+    {
+        switch (impact) 
+        {
+            case EffectImpact.LOW_IMPACT:
+                _positiveEffect.SpawnParticlesLowAmount();
+                break;
+            case EffectImpact.MEDIUM_IMPACT:
+                _positiveEffect.SpawnParticlesMediumAmount();
+                break;
+            case EffectImpact.HIGH_IMPACT:
+                _positiveEffect.SpawnParticlesHighAmount();
+                break;
+        }
+    }
+
+    private void PlayNegativeParticleEffect(EffectImpact impact)
+    {
+        switch (impact)
+        {
+            case EffectImpact.LOW_IMPACT:
+                _negativeEffect.SpawnParticlesLowAmount();
+                break;
+            case EffectImpact.MEDIUM_IMPACT:
+                _negativeEffect.SpawnParticlesMediumAmount();
+                break;
+            case EffectImpact.HIGH_IMPACT:
+                _negativeEffect.SpawnParticlesHighAmount();
+                break;
         }
     }
 }

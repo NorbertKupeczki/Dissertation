@@ -52,8 +52,7 @@ public class AreaEffector : MonoBehaviour
         if(agents == null) return;
         foreach (Agent agent in agents)
         {
-            Debug.Log($"Applying area effect 1: {agent.gameObject.name}");
-            //Todo: Apply area effect 1 here
+            agent.RelationChangeTest(1);
         }
     }
 
@@ -63,8 +62,7 @@ public class AreaEffector : MonoBehaviour
         if (agents == null) return;
         foreach (Agent agent in agents)
         {
-            Debug.Log($"Applying area effect 2: {agent.gameObject.name}");
-            //Todo: Apply area effect 2 here
+            agent.RelationChangeTest(-1);
         }
     }
 }

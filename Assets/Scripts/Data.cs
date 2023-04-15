@@ -11,6 +11,14 @@ namespace GeneralData
         NEUROTICISM = 4
     }
 
+    public enum EffectImpact
+    {
+        LOW_IMPACT = 0,
+        MEDIUM_IMPACT = 1,
+        HIGH_IMPACT = 2
+    }
+
+
     public class Data
     {
         public const short NUMBER_OF_STATS = 5;
@@ -33,6 +41,14 @@ namespace GeneralData
         public const float LEFT_ROTATION = -1.0f;
         public const float RIGHT_ROTATION = 1.0f;
     }
+
+    public class ParticleData
+    {
+        public static readonly ParticleSystem.MinMaxCurve LOW_PARTICLE_AMOUNT = 2;
+        public static readonly ParticleSystem.MinMaxCurve MEDIUM_PARTICLE_AMOUNT = 4;
+        public static readonly ParticleSystem.MinMaxCurve HIGH_PARTICLE_AMOUNT = 6;
+    }
+
 }
 
 
