@@ -9,6 +9,9 @@ public static class EventManager
     public static event Action PositiveAreaEffect;
     public static event Action NegativeAreaEffect;
 
+    public static event Action<Vector3> MoveCamera;
+    public static event Action<float> RotateCamera;
+
     public static void OnAgentSelected(Agent agent)
     {
         AgentSelected?.Invoke(agent);
@@ -31,5 +34,15 @@ public static class EventManager
     public static void OnNegativeAreaEffect()
     {
         NegativeAreaEffect?.Invoke();
+    }
+
+    public static void OnCameraControlMoveInput(Vector3 vector)
+    {
+        MoveCamera?.Invoke(vector);
+    }
+
+    public static void OnCameraControlRotateInput(float rotation)
+    {
+        RotateCamera?.Invoke(rotation);
     }
 }

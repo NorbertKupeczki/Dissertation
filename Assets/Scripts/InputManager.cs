@@ -10,7 +10,8 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         if (AnyMouseButtonClicked()) UpdateMouse();
-        UpdateKeyboard();
+        UpdateKeyboardInput();
+        UpdateCameraControlsInput();
     }
 
     private void UpdateMouse()
@@ -44,22 +45,80 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private static void UpdateKeyboard()
+    private static void UpdateKeyboardInput()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             EventManager.OnDeselect();
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             EventManager.OnPositiveAreaEffect();
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             EventManager.OnNegativeAreaEffect();
         }
+    }
+
+    private static void UpdateCameraControlsInput()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            EventManager.OnCameraControlMoveInput(InputData.LEFT_VECTOR);
+        }
+        else if (Input.GetKeyUp(KeyCode.A))
+        {
+            EventManager.OnCameraControlMoveInput(-InputData.LEFT_VECTOR);
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            EventManager.OnCameraControlMoveInput(InputData.RIGHT_VECTOR);
+        }
+        else if (Input.GetKeyUp(KeyCode.D))
+        {
+            EventManager.OnCameraControlMoveInput(-InputData.RIGHT_VECTOR);
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            EventManager.OnCameraControlMoveInput(InputData.UP_VECTOR);
+        }
+        else if (Input.GetKeyUp(KeyCode.W))
+        {
+            EventManager.OnCameraControlMoveInput(-InputData.UP_VECTOR);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            EventManager.OnCameraControlMoveInput(InputData.DOWN_VECTOR);
+        }
+        else if (Input.GetKeyUp(KeyCode.S))
+        {
+            EventManager.OnCameraControlMoveInput(-InputData.DOWN_VECTOR);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            EventManager.OnCameraControlRotateInput(InputData.LEFT_ROTATION);
+        }
+        else if (Input.GetKeyUp(KeyCode.Q))
+        {
+            EventManager.OnCameraControlRotateInput(-InputData.LEFT_ROTATION);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            EventManager.OnCameraControlRotateInput(InputData.RIGHT_ROTATION);
+        }
+        else if (Input.GetKeyUp(KeyCode.E))
+        {
+            EventManager.OnCameraControlRotateInput(-InputData.RIGHT_ROTATION);
+        }
+
     }
 
     private static bool IsMouseOverUi(PointerEventData eventData)

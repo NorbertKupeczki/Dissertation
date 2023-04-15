@@ -24,6 +24,14 @@ namespace GeneralData
         public const int LEFT_MOUSE_BUTTON = 0;
         public const int RIGHT_MOUSE_BUTTON = 1;
         public const int MIDDLE_MOUSE_BUTTON = 2;
+
+        public static readonly Vector3 LEFT_VECTOR = new(-1.0f, 0.0f, 0.0f);
+        public static readonly Vector3 RIGHT_VECTOR = new(1.0f, 0.0f, 0.0f);
+        public static readonly Vector3 UP_VECTOR = new(0.0f, 0.0f, 1.0f);
+        public static readonly Vector3 DOWN_VECTOR = new(0.0f, 0.0f, -1.0f);
+
+        public const float LEFT_ROTATION = -1.0f;
+        public const float RIGHT_ROTATION = 1.0f;
     }
 }
 
