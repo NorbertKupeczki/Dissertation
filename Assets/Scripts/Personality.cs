@@ -45,4 +45,11 @@ public class Personality
         _agreeableness = GetRandomTrait();
         _neuroticism = GetRandomTrait();
     }
+
+    public int ReceiveInteraction(InteractionDataSO data)
+    {
+        // Evaluates data, returns the value of the change based on the
+        // agent's personality and the event's properties
+        return 0;
+    }
 }

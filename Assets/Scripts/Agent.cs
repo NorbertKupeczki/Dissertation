@@ -118,20 +118,17 @@ public class Agent : MonoBehaviour
     /// <param name="newContact"></param>
     public bool RegisterContact(Agent newContact, int relationValue)
     {
-        if (!CheckContact(newContact))
-        {
-            _contacts.Add(newContact);
-            _contactRelations.Add(newContact, relationValue);
+        if (CheckContact(newContact)) return false;
+        _contacts.Add(newContact);
+        _contactRelations.Add(newContact, relationValue);
 
-            RelationLine newLine = Instantiate(_relationLinePrefab, gameObject.transform);
-            newLine.SetLineEnd(newContact.transform);
-            newLine.SetLineStart(gameObject.transform);
-            _relationLines.Add(newLine);
+        RelationLine newLine = Instantiate(_relationLinePrefab, gameObject.transform);
+        newLine.SetLineEnd(newContact.transform);
+        newLine.SetLineStart(gameObject.transform);
+        _relationLines.Add(newLine);
             
-            SortContacts();
-            return true;
-        }
-        return false;
+        SortContacts();
+        return true;
     }
 
     /// <summary>
@@ -141,17 +138,14 @@ public class Agent : MonoBehaviour
     /// <returns>Returns true if the removal of contact was successful</returns>
     public bool RemoveContact(Agent contact)
     {
-        if (_contacts.Contains(contact))
-        {
-            _contacts.Remove(contact);
-            _contactRelations.Remove(contact);
+        if (!_contacts.Contains(contact)) return false;
+        _contacts.Remove(contact);
+        _contactRelations.Remove(contact);
 
-            //Todo: Add removal of relationship line!
+        //Todo: Add removal of relationship line!
 
-            SortContacts();
-            return true;
-        }
-        return false;
+        SortContacts();
+        return true;
     }
 
     /// <summary>

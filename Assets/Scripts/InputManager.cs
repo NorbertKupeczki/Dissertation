@@ -51,7 +51,7 @@ public class InputManager : MonoBehaviour
         {
             EventManager.OnDeselect();
         }
-
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             EventManager.OnPositiveAreaEffect();
@@ -61,6 +61,7 @@ public class InputManager : MonoBehaviour
         {
             EventManager.OnNegativeAreaEffect();
         }
+#endif
     }
 
     private static void UpdateCameraControlsInput()
@@ -118,12 +119,10 @@ public class InputManager : MonoBehaviour
         {
             EventManager.OnCameraControlRotateInput(-InputData.RIGHT_ROTATION);
         }
-
     }
 
     private static bool IsMouseOverUi(PointerEventData eventData)
     {
-        
         eventData.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         var results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
@@ -154,7 +153,7 @@ public class InputManager : MonoBehaviour
         {
             result = Vector3.zero;
             return false;
-        };
+        }
 
         result = hit.point;
         return true;

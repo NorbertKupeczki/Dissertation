@@ -21,12 +21,6 @@ public class ParticleController : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        HandleKeyboardInput();
-    }
-
     private void SetParticlesAmountAndPlay(ParticleSystem.MinMaxCurve particleAmount)
     {
         _emissionModule.rateOverTime = particleAmount;
@@ -48,7 +42,8 @@ public class ParticleController : MonoBehaviour
         SetParticlesAmountAndPlay(ParticleData.HIGH_PARTICLE_AMOUNT);
     }
 
-    private void HandleKeyboardInput()
+#if UNITY_EDITOR
+    private void HandleKeyboardInput() // ONLY FOR TESTING
     {
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
@@ -65,4 +60,5 @@ public class ParticleController : MonoBehaviour
             SpawnParticlesHighAmount();
         }
     }
+#endif
 }
