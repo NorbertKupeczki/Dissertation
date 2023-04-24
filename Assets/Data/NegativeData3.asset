@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c38641c86c5e1c746b451b255ba6e05e, type: 3}
-  m_Name: TestData
+  m_Name: NegativeData3
   m_EditorClassIdentifier: 
-  Name: 
-  Impact: 0
-  Openness: 0
-  Conscientiousness: 0
-  Extraversion: 0
-  Agreeableness: 0
-  Neuroticism: 0
+  Name: NegativeTestData3
+  Impact: -4
+  Openness: 50
+  Conscientiousness: 50
+  Extraversion: 50
+  Agreeableness: 50
+  Neuroticism: 50

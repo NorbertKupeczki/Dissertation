@@ -1,4 +1,6 @@
 using static Utility.Utility;
+using GeneralData;
+using UnityEngine;
 
 public class Personality
 {
@@ -48,8 +50,26 @@ public class Personality
 
     public int ReceiveInteraction(InteractionDataSO data)
     {
-        // Evaluates data, returns the value of the change based on the
-        // agent's personality and the event's properties
-        return 0;
+        float relationChange = EvaluateAllTraitsVsEvents(data) * data.Impact;
+        return Mathf.RoundToInt(relationChange);
+    }
+
+    private float EvaluateAllTraitsVsEvents(InteractionDataSO data)
+    {
+        float result = EvaluateEventVersusTrait(data.Openness, _openness);
+        result += EvaluateEventVersusTrait(data.Conscientiousness, _conscientiousness);
+        result += EvaluateEventVersusTrait(data.Extraversion, _extraversion);
+        result += EvaluateEventVersusTrait(data.Agreeableness, _agreeableness);
+        result += EvaluateEventVersusTrait(data.Neuroticism, _neuroticism);
+
+        return result * 0.2f;
+    }
+
+    private float EvaluateEventVersusTrait(int eventValue, int traitValue)
+    {
+        float traitFactor = (traitValue - Data.EVALUATION_FACTOR) * 0.01f;
+        float eventFactor = (eventValue - Data.EVALUATION_FACTOR) * 0.01f;
+
+        return 1 + traitFactor + eventFactor;
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AreaEffector : MonoBehaviour
 {
+    [SerializeField] public InteractionDataSO _positiveInteractionData;
+    [SerializeField] public InteractionDataSO _negativeInteractionData;
+
     void Start()
     {
         SubscribeEvents();
@@ -14,6 +17,7 @@ public class AreaEffector : MonoBehaviour
         UnsubscribeEvents();
     }
 
+#region >> Event registration functions
     private void SubscribeEvents()
     {
         EventManager.Move += Move;
@@ -27,6 +31,7 @@ public class AreaEffector : MonoBehaviour
         EventManager.PositiveAreaEffect -= ApplyPositiveAreaEffect;
         EventManager.NegativeAreaEffect -= ApplyNegativeAreaEffect;
     }
+#endregion
 
     public void Move(Vector3 position)
     {
@@ -50,19 +55,15 @@ public class AreaEffector : MonoBehaviour
     {
         List<Agent> agents = GetAgentsInArea();
         if(agents == null) return;
-        foreach (Agent agent in agents)
-        {
-            agent.RelationChangeTest(1);
-        }
+
+        EventManager.OnInteractionEvent(transform.position, _positiveInteractionData, agents );
     }
 
     private void ApplyNegativeAreaEffect()
     {
         List<Agent> agents = GetAgentsInArea();
         if (agents == null) return;
-        foreach (Agent agent in agents)
-        {
-            agent.RelationChangeTest(-1);
-        }
+
+        EventManager.OnInteractionEvent(transform.position, _negativeInteractionData, agents);
     }
 }

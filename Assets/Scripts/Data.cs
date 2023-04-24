@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GeneralData
@@ -18,6 +20,25 @@ namespace GeneralData
         HIGH_IMPACT = 2
     }
 
+    public struct InteractionEvent
+    {
+        public InteractionEvent(Vector3 position, InteractionDataSO @event, List<Agent> affectedAgents, float time, int eventId)
+
+        {
+            Position = position;
+            Event = @event;
+            AffectedAgents = affectedAgents;
+            Time = time;
+            EventId = eventId;
+        }
+
+        public Vector3 Position { get; private set; }
+        public InteractionDataSO Event { get; private set; }
+        public List<Agent> AffectedAgents { get; private set; }
+        public float Time { get; private set; }
+        public int EventId { get; private set; }
+    
+    }
 
     public class Data
     {
@@ -25,6 +46,9 @@ namespace GeneralData
         public const short MAX_STAT_VALUE = 100;
         public const float UPDATE_REFRESH_IN_SEC = 0.1f;
         public const float AOE_DETECTION_RADIUS = 4.0f;
+
+        public const int EVALUATION_FACTOR = 50;
+        public const int STARTING_PLAYER_RELATION = 50;
     }
 
     public class InputData

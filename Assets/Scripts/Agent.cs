@@ -31,6 +31,8 @@ public class Agent : MonoBehaviour
     private Personality _personality = null;
     private Dictionary<Agent, int> _contactRelations = new();
 
+    private InteractionsMemory _memory = new();
+
     /// <summary>
     /// Gets the agent's gender
     /// </summary>
@@ -66,7 +68,7 @@ public class Agent : MonoBehaviour
 
     private void Start()
     {
-        _relationToPlayer = GetRandomTrait();
+        _relationToPlayer = Data.STARTING_PLAYER_RELATION;
 
         SubscribeEvents();
     }
@@ -76,6 +78,7 @@ public class Agent : MonoBehaviour
         UnsubscribeEvents();
     }
 
+#region >> Event registration functions
     private void SubscribeEvents()
     {
         EventManager.AgentSelected += EnableRelationLines;
@@ -87,6 +90,7 @@ public class Agent : MonoBehaviour
         EventManager.AgentSelected -= EnableRelationLines;
         EventManager.Deselect -= DisableRelationLines;
     }
+#endregion
 
     /// <summary>
     /// Initialises the colours of the agent.
@@ -263,10 +267,39 @@ public class Agent : MonoBehaviour
         }
     }
 
-    public void RelationChangeTest(int value)
+    public void ProcessInteractionEvent(InteractionEvent @event)
     {
-        if (value > 0) PlayPositiveParticleEffect(EffectImpact.HIGH_IMPACT);
-        else if (value < 0) PlayNegativeParticleEffect(EffectImpact.HIGH_IMPACT);
+        // this is where the agent processes an incoming interaction
+        // 1. Check event in memory, if it is already registered, do nothing, return
+        if(_memory.CheckMemoryForEvent(@event)) return;
+        // 2. If the event is not registered, register, then check event data against personality to determine the impact
+        _memory.RegisterMemory(@event);
+        int impactOnRelation = _personality.ReceiveInteraction(@event.Event);
+        // 3. Based on data returned, change the relationship score
+        // 4. Based on relationship score change, play particle effect
+        RelationToPlayerChange(impactOnRelation);
+    }
+
+    public void RelationToPlayerChange(int value)
+    {
+        if (value > 0) PlayPositiveParticleEffect(EvaluateImpact(value));
+        else if (value < 0) PlayNegativeParticleEffect(EvaluateImpact(value));
+
+        _relationToPlayer += value;
+    }
+
+    private EffectImpact EvaluateImpact(int value)
+    {
+        int absValue = Mathf.Abs(value);
+        switch (absValue)
+        {
+            case <= 5:
+                return EffectImpact.LOW_IMPACT;
+            case <= 9:
+                return EffectImpact.MEDIUM_IMPACT;
+            default:
+                return EffectImpact.HIGH_IMPACT;
+        }
     }
 
     private void PlayPositiveParticleEffect(EffectImpact impact)

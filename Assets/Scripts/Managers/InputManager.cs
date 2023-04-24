@@ -14,6 +14,11 @@ public class InputManager : MonoBehaviour
         UpdateCameraControlsInput();
     }
 
+    public Agent GetSelectedAgent()
+    {
+        return _selectedAgent;
+    }
+
     private void UpdateMouse()
     {
         PointerEventData eventData = new(EventSystem.current);
@@ -33,7 +38,7 @@ public class InputManager : MonoBehaviour
         // Right mouse click
         else if (Input.GetMouseButtonDown(InputData.RIGHT_MOUSE_BUTTON))
         {
-            EventManager.OnDeselect();
+            DeselectAgent();
         }
         // Middle mouse click
         else if (Input.GetMouseButtonDown(InputData.MIDDLE_MOUSE_BUTTON))
@@ -45,23 +50,12 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private static void UpdateKeyboardInput()
+    private void UpdateKeyboardInput()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            EventManager.OnDeselect();
+            DeselectAgent();
         }
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            EventManager.OnPositiveAreaEffect();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            EventManager.OnNegativeAreaEffect();
-        }
-#endif
     }
 
     private static void UpdateCameraControlsInput()
@@ -121,6 +115,12 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    private void DeselectAgent()
+    {
+        EventManager.OnDeselect();
+        _selectedAgent = null;
+    }
+
     private static bool IsMouseOverUi(PointerEventData eventData)
     {
         eventData.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -157,5 +157,15 @@ public class InputManager : MonoBehaviour
 
         result = hit.point;
         return true;
+    }
+
+    public void PositiveAreaEffect()
+    {
+        EventManager.OnPositiveAreaEffect();
+    }
+
+    public void NegativeAreaEffect()
+    {
+        EventManager.OnNegativeAreaEffect();
     }
 }
