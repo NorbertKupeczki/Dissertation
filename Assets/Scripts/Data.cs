@@ -49,6 +49,9 @@ namespace GeneralData
 
         public const int EVALUATION_FACTOR = 50;
         public const int STARTING_PLAYER_RELATION = 50;
+
+        public const int RELATIONSHIP_SCORE_MIN = 0;
+        public const int RELATIONSHIP_SCORE_MAX = 100;
     }
 
     public class InputData

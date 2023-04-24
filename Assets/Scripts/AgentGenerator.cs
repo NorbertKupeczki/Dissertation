@@ -46,6 +46,11 @@ public class AgentGenerator : MonoBehaviour
                 startPosition += Vector3.right * 10.0f;
             }
         }
+
+        foreach (Cluster cluster in _clusters)
+        {
+            cluster.GenerateInterClusterConnections(_clusters);
+        }
     }
 
     private Cluster GenerateCluster(ref Vector3 clusterPosition, int index)

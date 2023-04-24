@@ -106,7 +106,7 @@ public class Agent : MonoBehaviour
     }
 
     /// <summary>
-    /// Searches the list of contacts for a GameObject.
+    /// Searches the list of contacts for an Agent.
     /// </summary>
     /// <param name="contact"></param>
     /// <returns>Returns true if the contact is found</returns>
@@ -163,19 +163,10 @@ public class Agent : MonoBehaviour
         {
             return;
         }
-
-        if (_contactRelations[contact] + value < 0)
-        {
-            _contactRelations[contact] = 0;
-        }
-        else if (_contactRelations[contact] + value > 100)
-        {
-            _contactRelations[contact] = 100;
-        }
-        else
-        {
-            _contactRelations[contact] += value;
-        }
+        
+        _contactRelations[contact] = Mathf.Clamp(_contactRelations[contact] + value,
+                                                 Data.RELATIONSHIP_SCORE_MIN,
+                                                 Data.RELATIONSHIP_SCORE_MAX);
 
         SortContacts();
     }
@@ -245,6 +236,10 @@ public class Agent : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Turns on the relationship lines of the agent.
+    /// </summary>
+    /// <param name="agent"></param>
     private void EnableRelationLines(Agent agent)
     {
         if (agent != this) return;
@@ -252,6 +247,9 @@ public class Agent : MonoBehaviour
         _relationLinesOn = true;
     }
 
+    /// <summary>
+    /// Turns off the relationship lines of the agent
+    /// </summary>
     private void DisableRelationLines()
     {
         if (!_relationLinesOn) return;
@@ -259,6 +257,10 @@ public class Agent : MonoBehaviour
         _relationLinesOn = false;
     }
 
+    /// <summary>
+    /// Toggles the relationship lines of the agent ON/Off
+    /// </summary>
+    /// <param name="value"></param>
     private void ToggleRelationLines(bool value)
     {
         foreach (RelationLine line in _relationLines)
@@ -267,12 +269,16 @@ public class Agent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Takes the InteractionEvent data and processes its information to change the agents
+    /// relation with the player.
+    /// </summary>
+    /// <param name="event"></param>
     public void ProcessInteractionEvent(InteractionEvent @event)
     {
-        // this is where the agent processes an incoming interaction
         // 1. Check event in memory, if it is already registered, do nothing, return
         if(_memory.CheckMemoryForEvent(@event)) return;
-        // 2. If the event is not registered, register, then check event data against personality to determine the impact
+        // 2. If the event is not registered, register it, then check event data against personality to determine the impact
         _memory.RegisterMemory(@event);
         int impactOnRelation = _personality.ReceiveInteraction(@event.Event);
         // 3. Based on data returned, change the relationship score
@@ -280,14 +286,33 @@ public class Agent : MonoBehaviour
         RelationToPlayerChange(impactOnRelation);
     }
 
+    /// <summary>
+    /// Display the relationship changes initiating the matching particle effect, also
+    /// changes the relationship value.
+    /// </summary>
+    /// <param name="value"></param>
     public void RelationToPlayerChange(int value)
     {
         if (value > 0) PlayPositiveParticleEffect(EvaluateImpact(value));
         else if (value < 0) PlayNegativeParticleEffect(EvaluateImpact(value));
 
-        _relationToPlayer += value;
+        ChangeRelataionScoreToPlayer(value);
     }
 
+    /// <summary>
+    /// Changes the agents relation with the player by adding the parameter, clamped by the minimum and maximum value possible.
+    /// </summary>
+    /// <param name="value"></param>
+    private void ChangeRelataionScoreToPlayer(int value)
+    {
+        _relationToPlayer = Mathf.Clamp(_relationToPlayer + value, Data.RELATIONSHIP_SCORE_MIN, Data.RELATIONSHIP_SCORE_MAX);
+    }
+
+    /// <summary>
+    /// Evaluates the impact category of a relationship change.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns>EffectImpact</returns>
     private EffectImpact EvaluateImpact(int value)
     {
         int absValue = Mathf.Abs(value);
@@ -302,6 +327,10 @@ public class Agent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Plays the particle effect showing positive change in relations
+    /// </summary>
+    /// <param name="impact"></param>
     private void PlayPositiveParticleEffect(EffectImpact impact)
     {
         switch (impact) 
@@ -318,6 +347,10 @@ public class Agent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Plays the particle effect showing negative change in relations
+    /// </summary>
+    /// <param name="impact"></param>
     private void PlayNegativeParticleEffect(EffectImpact impact)
     {
         switch (impact)

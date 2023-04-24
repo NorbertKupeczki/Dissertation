@@ -1,37 +1,40 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Utility.Utility;
 
 public class Cluster : MonoBehaviour
 {
-    [SerializeField] private List<Agent> _members = new List<Agent>();
-    [SerializeField] private List<ContactPairs> _contacts = new List<ContactPairs>();
+    [SerializeField] private List<Agent> _members = new();
+    [SerializeField] private List<ContactPairs> _contacts = new();
     [SerializeField] public Color _clusterColour { get; private set; }
     
     private void Awake()
     {
         _clusterColour = GetRandomColour();
     }
-
-    // Start is called before the first frame update
-    void Start()
+    
+    private struct ContactPairs
     {
-        
+        public Agent firstContact;
+        public Agent secondContact;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        foreach(ContactPairs pair in _contacts)
-        {
-            pair.DrawConnectionLine();
-        }
-    }
-
+    /// <summary>
+    /// Returns the list of members of the cluster
+    /// </summary>
+    /// <returns>List of Agent</returns>
     public List<Agent> GetMembersList()
     {
         return _members;
+    }
+
+    /// <summary>
+    /// Returns a random member of the cluster
+    /// </summary>
+    /// <returns>Agent</returns>
+    public Agent GetRandomMember()
+    {
+        return _members[RollADice(_members.Count -1)];
     }
 
     /// <summary>
@@ -47,6 +50,9 @@ public class Cluster : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Generates the connections within the cluster
+    /// </summary>
     public void GenerateConnections()
     {
         for (int i = 0; i < _members.Count; i++)
@@ -73,17 +79,11 @@ public class Cluster : MonoBehaviour
         }
     }
 
-    private struct ContactPairs
-    {
-        public Agent firstContact;
-        public Agent secondContact;
-
-        public void DrawConnectionLine()
-        {
-            Debug.DrawLine(firstContact.transform.position, secondContact.transform.position,Color.green);
-        }
-    }
-
+    /// <summary>
+    /// Pairs the members of the cluster using their IDs.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
     private void AddPairsToContacts(int x, int y)
     {
         foreach (ContactPairs pair in _contacts)
@@ -101,9 +101,65 @@ public class Cluster : MonoBehaviour
             secondContact = _members[y]
         });
 
-        int relationScore = Random.Range(0, 100);
+        MutuallyRegisterContacts(_members[x], _members[y]);
+    }
 
-        _members[x].RegisterContact(_members[y], relationScore);
-        _members[y].RegisterContact(_members[x], relationScore);
+    /// <summary>
+    /// Generates contacts for each agents from outside their cluster.
+    /// </summary>
+    /// <param name="clusters"></param>
+    public void GenerateInterClusterConnections(List<Cluster> clusters)
+    {
+        int connections = 0;
+        Cluster currentCluster;
+        Agent currentAgent;
+
+        foreach (Agent member in _members)
+        {
+            connections = RollARealDice(clusters.Count);
+
+            for (int i = 0; i < connections; ++i)
+            {
+                // 1. Pick a cluster different to this
+                currentCluster = PickRandomCluster(clusters);
+                // 2. Pick a random member
+                currentAgent = currentCluster.GetRandomMember();
+                // 3. Check if this and the picked member are contacts already, if yes, skip
+                if (member.CheckContact(currentAgent)) continue;
+                // 4. If not, make them contacts
+                MutuallyRegisterContacts(member, currentAgent);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Picks a random cluster that is different from the caller from a List provided
+    /// </summary>
+    /// <param name="clusters"></param>
+    /// <returns>Cluster</returns>
+    private Cluster PickRandomCluster(List<Cluster> clusters)
+    {
+        Cluster result;
+
+        do
+        {
+            int randomIndex = RollADice(clusters.Count - 1);
+            result = clusters[randomIndex];
+        } while (result == this);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Mutually registers two agents as each others contacts.
+    /// </summary>
+    /// <param name="AgentOne"></param>
+    /// <param name="AgentTwo"></param>
+    private void MutuallyRegisterContacts(Agent AgentOne, Agent AgentTwo)
+    {
+        int relationScore = RollARealDice(100);
+
+        AgentOne.RegisterContact(AgentTwo, relationScore);
+        AgentTwo.RegisterContact(AgentOne, relationScore);
     }
 }
