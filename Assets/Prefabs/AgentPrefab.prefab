@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4177159712880441173}
   - component: {fileID: 4177159712880441162}
+  - component: {fileID: 207780624921760565}
   - component: {fileID: 1856814117717947765}
   m_Layer: 7
   m_Name: AgentPrefab
@@ -146,6 +147,18 @@ MonoBehaviour:
     type: 3}
   _positiveEffect: {fileID: 2766512047744884474}
   _negativeEffect: {fileID: 1284084092345094921}
+--- !u!114 &207780624921760565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4177159712880441163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d700c8264eb1246922269fb46870d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!136 &1856814117717947765
 CapsuleCollider:
   m_ObjectHideFlags: 0

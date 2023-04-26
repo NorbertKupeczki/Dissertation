@@ -54,6 +54,13 @@ namespace GeneralData
         public const int RELATIONSHIP_SCORE_MAX = 100;
     }
 
+    public class GossipData
+    {
+        public const float GOSSIP_DELAY_MIN = 6.0f;
+        public const float GOSSIP_DELAY_MAX = 16.0f;
+        public const float GOSSIP_CLUSTER_TIME_MULTIPLIER = 0.5f;
+    }
+
     public class InputData
     {
         public const int LEFT_MOUSE_BUTTON = 0;

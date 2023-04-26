@@ -32,6 +32,10 @@ public class Agent : MonoBehaviour
     private Dictionary<Agent, int> _contactRelations = new();
 
     private InteractionsMemory _memory = new();
+    private int _internalConnections = 0;
+    private Gossip _gossip;
+
+    private int _clusterID;
 
     /// <summary>
     /// Gets the agent's gender
@@ -49,6 +53,8 @@ public class Agent : MonoBehaviour
     /// </summary>
     public Personality Personality => _personality;
 
+    
+
     private void Awake()
     {
         _gender = GetRandomSex();
@@ -60,10 +66,12 @@ public class Agent : MonoBehaviour
         {
             _hair = Instantiate(_femaleHairObj, _skin.transform.position, Quaternion.Euler(s_blenderRotation), gameObject.transform);
         }
-
+        
         _hair.name = "Hair";
 
         _personality = new Personality();
+        _gossip = GetComponent<Gossip>();
+        _gossip.SetLinkToMemory(_memory);
     }
 
     private void Start()
@@ -90,19 +98,40 @@ public class Agent : MonoBehaviour
         EventManager.AgentSelected -= EnableRelationLines;
         EventManager.Deselect -= DisableRelationLines;
     }
-#endregion
+    #endregion
+    
+    /// <summary>
+    /// Sets the cluster ID
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetClusterID(int value)
+    {
+        _clusterID = value;
+    }
 
     /// <summary>
-    /// Initialises the colours of the agent.
+    /// Returns the cluster ID
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns>Int</returns>
+    public bool CheckClusterID(int value)
+    {
+        return _clusterID == value;
+    }
+
+    /// <summary>
+    /// Initialises the agent.
     /// </summary>
     /// <param name="hairColour"></param>
     /// <param name="skinColour"></param>
     /// <param name="bodyColour"></param>
-    public void InitAgent(Color hairColour, Color skinColour, Color bodyColour)
+    /// <param name="clusterID"></param>
+    public void InitAgent(Color hairColour, Color skinColour, Color bodyColour, int clusterID)
     {
         _hair.GetComponent<Renderer>().material.color = hairColour;
         _skin.GetComponent<Renderer>().material.color = skinColour;
         _body.GetComponent<Renderer>().material.color = bodyColour;
+        SetClusterID(clusterID);
     }
 
     /// <summary>
@@ -237,6 +266,14 @@ public class Agent : MonoBehaviour
     }
 
     /// <summary>
+    /// Sets the number of internal connections
+    /// </summary>
+    public void SetNumberOfInternalConnections()
+    {
+        _internalConnections = _contacts.Count;
+    }
+
+    /// <summary>
     /// Turns on the relationship lines of the agent.
     /// </summary>
     /// <param name="agent"></param>
@@ -273,14 +310,14 @@ public class Agent : MonoBehaviour
     /// Takes the InteractionEvent data and processes its information to change the agents
     /// relation with the player.
     /// </summary>
-    /// <param name="event"></param>
-    public void ProcessInteractionEvent(InteractionEvent @event)
+    /// <param name="eventData"></param>
+    public void ProcessInteractionEvent(InteractionEvent eventData)
     {
         // 1. Check event in memory, if it is already registered, do nothing, return
-        if(_memory.CheckMemoryForEvent(@event)) return;
+        if(_memory.CheckMemoryForEvent(eventData)) return;
         // 2. If the event is not registered, register it, then check event data against personality to determine the impact
-        _memory.RegisterMemory(@event);
-        int impactOnRelation = _personality.ReceiveInteraction(@event.Event);
+        _memory.RegisterMemory(eventData);
+        int impactOnRelation = _personality.ReceiveInteraction(eventData.Event);
         // 3. Based on data returned, change the relationship score
         // 4. Based on relationship score change, play particle effect
         RelationToPlayerChange(impactOnRelation);
@@ -364,6 +401,22 @@ public class Agent : MonoBehaviour
             case EffectImpact.HIGH_IMPACT:
                 _negativeEffect.SpawnParticlesHighAmount();
                 break;
+        }
+    }
+
+    /// <summary>
+    /// Initialises the gossip module
+    /// </summary>
+    public void InitGossipModule()
+    {
+        for(int i = 0; i < _contacts.Count ; ++i)
+        {
+            if (_contacts[i].CheckClusterID(_clusterID))
+            {
+                _gossip.AddContactToList(_contacts[i], true);
+                continue;
+            }
+            _gossip.AddContactToList(_contacts[i], false);
         }
     }
 }

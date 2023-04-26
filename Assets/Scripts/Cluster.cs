@@ -75,8 +75,8 @@ public class Cluster : MonoBehaviour
             while (b == i && b == a);
 
             AddPairsToContacts(i, b);
-
         }
+
     }
 
     /// <summary>
@@ -116,6 +116,7 @@ public class Cluster : MonoBehaviour
 
         foreach (Agent member in _members)
         {
+            member.SetNumberOfInternalConnections();
             connections = RollARealDice(clusters.Count);
 
             for (int i = 0; i < connections; ++i)

@@ -36,9 +36,9 @@ public class InteractionsManager : MonoBehaviour
         RegisterEventWithAffectedAgents(newEvent); 
     }
 
-    public int FindEventInHistory(InteractionEvent @event)
+    public int FindEventInHistory(InteractionEvent eventData)
     {
-        if (_interactionHistory.TryGetValue(@event, out var history))
+        if (_interactionHistory.TryGetValue(eventData, out var history))
         {
             return history;
         }

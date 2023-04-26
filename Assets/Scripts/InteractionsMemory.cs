@@ -3,15 +3,69 @@ using System.Collections.Generic;
 
 public class InteractionsMemory
 {
-    private Dictionary<InteractionEvent, int> _agentMemory = new();
+    private Dictionary<InteractionEvent, List<Agent>> _agentMemory = new();
 
-    public void RegisterMemory(InteractionEvent @event)
+    public void RegisterMemory(InteractionEvent eventData)
     {
-        _agentMemory.Add(@event, _agentMemory.Count);
+        _agentMemory.Add(eventData, new());
     }
 
-    public bool CheckMemoryForEvent(InteractionEvent @event)
+    /// <summary>
+    /// Checks if an agent has an event in its memory.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <returns>bool</returns>
+    public bool CheckMemoryForEvent(InteractionEvent eventData)
     {
-        return _agentMemory.ContainsKey(@event);
+        return _agentMemory.ContainsKey(eventData);
+    }
+
+    /// <summary>
+    /// Returns the gossip list of an event.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <returns>List of Agent</returns>
+    public List<Agent> GetGossipList(InteractionEvent eventData)
+    {
+        _agentMemory.TryGetValue(eventData, out List<Agent> gossipList);
+        return gossipList;
+    }
+
+    /// <summary>
+    /// Checks if an agent is on an event's gossip list, returns true if the agent is on this list.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <param name="agent"></param>
+    /// <returns>Bool</returns>
+    public bool CheckAgentOnGossipList(InteractionEvent eventData, Agent agent)
+    {
+        return _agentMemory[eventData].Contains(agent);
+    }
+
+    /// <summary>
+    /// Adds agent to an events gossip list, returns true if the insertion was successful,
+    /// false if the agent was on the list already.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <param name="agent"></param>
+    /// <returns>Bool</returns>
+    public bool AddAgentToGossipList(InteractionEvent eventData, Agent agent)
+    {
+        if (_agentMemory[eventData].Contains(agent)) return false;
+        _agentMemory[eventData].Add(agent);
+        return true;
+    }
+    
+    public bool FindUntoldGossip(Agent agent, out InteractionEvent eventData)
+    {
+        foreach (var element in _agentMemory)
+        {
+            if (element.Value.Contains(agent)) continue;
+            eventData = element.Key;
+            return true;
+        }
+
+        eventData = new();
+        return false;
     }
 }

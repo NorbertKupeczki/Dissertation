@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Utility.Utility;
 
@@ -47,6 +48,24 @@ public class AgentGenerator : MonoBehaviour
             }
         }
 
+        GenerateInterClusterConnections();
+
+        InitialiseGossipModules();
+    }
+
+    private void InitialiseGossipModules()
+    {
+        foreach (Cluster cluster in _clusters)
+        {
+            foreach (Agent agent in cluster.GetMembersList())
+            {
+                agent.InitGossipModule();
+            }
+        }
+    }
+
+    private void GenerateInterClusterConnections()
+    {
         foreach (Cluster cluster in _clusters)
         {
             cluster.GenerateInterClusterConnections(_clusters);
@@ -63,12 +82,12 @@ public class AgentGenerator : MonoBehaviour
 
         cluster.name = "Cluster " + (index + 1);
 
-        FillClusterWithAgents(scriptComponent, numberOfAgents);
+        FillClusterWithAgents(scriptComponent, numberOfAgents, index);
 
         return scriptComponent;
     }
 
-    private void FillClusterWithAgents(Cluster cluster, int numberOfAgents)
+    private void FillClusterWithAgents(Cluster cluster, int numberOfAgents, int clusterID)
     {
         float clusterRadius = (2.0f * numberOfAgents) / (2 * Mathf.PI);
         Vector3 radiusVector = new Vector3(clusterRadius, 0.0f, 0.0f);
@@ -78,7 +97,7 @@ public class AgentGenerator : MonoBehaviour
         {
             Vector3 agentPosition = (Quaternion.Euler(0, clusterSegmentInDegrees * i, 0) * radiusVector) + cluster.transform.position;
             GameObject agent = Instantiate(_agentTemplate, agentPosition, Quaternion.identity, cluster.transform);
-            agent.GetComponent<Agent>().InitAgent(GetRandomHairColour(), GetRandomSkinColour(), cluster._clusterColour);
+            agent.GetComponent<Agent>().InitAgent(GetRandomHairColour(), GetRandomSkinColour(), cluster._clusterColour, clusterID);
             agent.transform.LookAt(cluster.transform.position, Vector3.up);
             agent.name = "Agent no." + (i + 1);
 
