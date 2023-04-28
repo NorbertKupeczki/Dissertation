@@ -56,6 +56,13 @@ public class InteractionsMemory
         return true;
     }
     
+    /// <summary>
+    /// Returns bool if there is an InteractionEvent that doesn't have the Agent parameter
+    /// registered with it. The first event found is then returned as an out parameter.
+    /// </summary>
+    /// <param name="agent"></param>
+    /// <param name="eventData"></param>
+    /// <returns>Bool</returns>
     public bool FindUntoldGossip(Agent agent, out InteractionEvent eventData)
     {
         foreach (var element in _agentMemory)

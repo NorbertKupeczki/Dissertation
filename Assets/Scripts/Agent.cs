@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using GeneralData;
 using UnityEngine;
@@ -69,7 +68,7 @@ public class Agent : MonoBehaviour
         
         _hair.name = "Hair";
 
-        _personality = new Personality();
+        _personality = new Personality(true);
         _gossip = GetComponent<Gossip>();
         _gossip.SetLinkToMemory(_memory);
     }

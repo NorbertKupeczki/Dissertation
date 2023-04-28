@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Personality
 {
-    public Personality()
+    private bool _traitsSet = false;
+    
+    public Personality(bool randomise)
     {
-        RandomGeneratePersonality();
+        if (randomise) RandomGeneratePersonality();
+        _traitsSet = randomise;
     }
 
     private int _openness; // inventive/curious vs. consistent/cautious
@@ -39,21 +42,58 @@ public class Personality
     public void SetNeuroticism(int value) => _neuroticism = value;
     #endregion
 
+    /// <summary>
+    /// Randomly generates the agent's personality traits.
+    /// </summary>
     public void RandomGeneratePersonality()
     {
-        _openness = GetRandomTrait();
-        _conscientiousness = GetRandomTrait();
-        _extraversion = GetRandomTrait();
-        _agreeableness = GetRandomTrait();
-        _neuroticism = GetRandomTrait();
+        SetOpenness(GetRandomTrait());
+        SetConscientiousness(GetRandomTrait());
+        SetExraversion(GetRandomTrait());
+        SetAgreeableness(GetRandomTrait());
+        SetNeuroticism(GetRandomTrait());
     }
 
+    /// <summary>
+    /// Returns the impact of an event on the agent based on the provided interaction data.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns>Int</returns>
     public int ReceiveInteraction(InteractionDataSO data)
     {
         float relationChange = EvaluateAllTraitsVsEvents(data) * data.Impact;
         return Mathf.RoundToInt(relationChange);
     }
 
+    /// <summary>
+    /// Sets the personality traits of the agent, returns true if the setting of data was successful, false
+    /// if the traits have already been set.
+    /// </summary>
+    /// <param name="openness"></param>
+    /// <param name="conscientiousness"></param>
+    /// <param name="extraversion"></param>
+    /// <param name="agreeableness"></param>
+    /// <param name="neuroticism"></param>
+    /// <returns>Bool</returns>
+    public bool SetPersonalityTraits(int openness, int conscientiousness, int extraversion, int agreeableness, int neuroticism)
+    {
+        if (_traitsSet) return false;
+        
+        SetOpenness(openness);
+        SetConscientiousness(conscientiousness);
+        SetExraversion(extraversion);
+        SetAgreeableness(agreeableness);
+        SetNeuroticism(neuroticism);
+
+        return _traitsSet = true;
+    }
+
+    /// <summary>
+    /// Evaluates all the personality traits compared to the event data, and returns a multiplier that
+    /// is to be used to determine the actual effect of the event.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns>Float</returns>
     private float EvaluateAllTraitsVsEvents(InteractionDataSO data)
     {
         float result = EvaluateEventVersusTrait(data.Openness, _openness);
@@ -65,6 +105,12 @@ public class Personality
         return result * 0.2f;
     }
 
+    /// <summary>
+    /// Evaluates an individual trait vs. the event data.
+    /// </summary>
+    /// <param name="eventValue"></param>
+    /// <param name="traitValue"></param>
+    /// <returns>Float</returns>
     private float EvaluateEventVersusTrait(int eventValue, int traitValue)
     {
         float traitFactor = (traitValue - Data.EVALUATION_FACTOR) * 0.01f;

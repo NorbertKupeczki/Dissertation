@@ -34,6 +34,7 @@ public class StatsGUI : MonoBehaviour
         UnsubscribeEvents();
     }
 
+#region >> Event subscription functions
     private void SubscribeEvents()
     {
         EventManager.AgentSelected += DisplaySelectedAgentStats;
@@ -45,7 +46,13 @@ public class StatsGUI : MonoBehaviour
         EventManager.AgentSelected -= DisplaySelectedAgentStats;
         EventManager.Deselect -= TurnPanelOff;
     }
+#endregion
 
+    /// <summary>
+    /// Turns on the display panel and loads sets the values to match the selected agent's statistics.
+    /// </summary>
+    /// <param name="agent"></param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     private void DisplaySelectedAgentStats(Agent agent)
     {
         Personality personality = agent.Personality;
@@ -78,14 +85,25 @@ public class StatsGUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Turns the panel off
+    /// </summary>
     private void TurnPanelOff() => TogglePanel(false);
 
+    /// <summary>
+    /// Toggles the visibility of the panel
+    /// </summary>
+    /// <param name="value"></param>
     private void TogglePanel(bool value)
     {
         _panel.SetActive(value);
         if (!value) _selectedAgent = null;
     }
 
+    /// <summary>
+    /// Starts the updating of the selected agent's player relation bar.
+    /// </summary>
+    /// <param name="agent"></param>
     private void StartPlayerRelationUpdate(Agent agent)
     {
         if (_playerRelationCoroutine != null)
@@ -95,6 +113,11 @@ public class StatsGUI : MonoBehaviour
         _playerRelationCoroutine = StartCoroutine(_playerRelationUpdateFunc(agent));
     }
 
+    /// <summary>
+    /// Updates the selected agent's player relationship data
+    /// </summary>
+    /// <param name="agent"></param>
+    /// <returns>IEnumerator</returns>
     private IEnumerator UpdateRelation(Agent agent)
     {
         while (_panel.activeSelf)

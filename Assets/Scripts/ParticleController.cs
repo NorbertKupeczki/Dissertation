@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using GeneralData;
 
@@ -15,28 +13,35 @@ public class ParticleController : MonoBehaviour
         _emissionModule = _particleSystem.emission;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
+    /// <summary>
+    /// Sets the amount of particles to be played by the effect, then plays the particle effect.
+    /// </summary>
+    /// <param name="particleAmount"></param>
     private void SetParticlesAmountAndPlay(ParticleSystem.MinMaxCurve particleAmount)
     {
         _emissionModule.rateOverTime = particleAmount;
         _particleSystem.Play();
     }
 
+    /// <summary>
+    /// Starts the particle effect with low amount of particles.
+    /// </summary>
     public void SpawnParticlesLowAmount()
     {
         SetParticlesAmountAndPlay(ParticleData.LOW_PARTICLE_AMOUNT);
     }
 
+    /// <summary>
+    /// Starts the particle effect with medium amount of particles.
+    /// </summary>
     public void SpawnParticlesMediumAmount()
     {
         SetParticlesAmountAndPlay(ParticleData.MEDIUM_PARTICLE_AMOUNT);
     }
 
+    /// <summary>
+    /// Starts the particle effect with high amount of particles.
+    /// </summary>
     public void SpawnParticlesHighAmount()
     {
         SetParticlesAmountAndPlay(ParticleData.HIGH_PARTICLE_AMOUNT);

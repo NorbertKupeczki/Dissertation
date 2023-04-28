@@ -82,7 +82,6 @@ namespace GeneralData
         public static readonly ParticleSystem.MinMaxCurve MEDIUM_PARTICLE_AMOUNT = 4;
         public static readonly ParticleSystem.MinMaxCurve HIGH_PARTICLE_AMOUNT = 6;
     }
-
 }
 
 

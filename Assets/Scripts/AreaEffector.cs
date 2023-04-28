@@ -33,11 +33,19 @@ public class AreaEffector : MonoBehaviour
     }
 #endregion
 
+    /// <summary>
+    /// Moves the zone marker to the location provided as a parameter
+    /// </summary>
+    /// <param name="position"></param>
     public void Move(Vector3 position)
     {
         transform.position = new Vector3(position.x, 0.0f, position.z);
     }
 
+    /// <summary>
+    /// Returns all agents in the effected area
+    /// </summary>
+    /// <returns></returns>
     private List<Agent> GetAgentsInArea()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, Data.AOE_DETECTION_RADIUS, LayerMask.GetMask("Agent"));
@@ -51,6 +59,9 @@ public class AreaEffector : MonoBehaviour
         return agentsHit;
     }
 
+    /// <summary>
+    /// Applies the positive effect on the agents within range
+    /// </summary>
     private void ApplyPositiveAreaEffect()
     {
         List<Agent> agents = GetAgentsInArea();
@@ -59,6 +70,9 @@ public class AreaEffector : MonoBehaviour
         EventManager.OnInteractionEvent(transform.position, _positiveInteractionData, agents );
     }
 
+    /// <summary>
+    /// Applies the negative effect on the agents within range
+    /// </summary>
     private void ApplyNegativeAreaEffect()
     {
         List<Agent> agents = GetAgentsInArea();
