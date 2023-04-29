@@ -19,6 +19,10 @@ public class StatSliderUI : MonoBehaviour
         _valueText = GetComponentsInChildren<TextMeshProUGUI>()[1];
     }
 
+    /// <summary>
+    /// Updates the slider based on the provided parameter.
+    /// </summary>
+    /// <param name="value"></param>
     public void UpdateSlider(int value)
     {
         _valueText.text = value.ToString();

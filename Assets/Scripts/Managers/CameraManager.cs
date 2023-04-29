@@ -27,6 +27,8 @@ public class CameraManager : MonoBehaviour
         UnsubscribeEvents();
     }
 
+#region >> Event registration functions
+
     private void SubscribeEvents()
     {
         EventManager.MoveCamera += UpdateMoveVector;
@@ -39,6 +41,12 @@ public class CameraManager : MonoBehaviour
         EventManager.RotateCamera -= UpdateCameraRotation;
     }
 
+#endregion
+
+    /// <summary>
+    /// Adjusts the camera rig's velocity based on the provided vector.
+    /// </summary>
+    /// <param name="vector"></param>
     private void UpdateMoveVector(Vector3 vector)
     {
         _cameraMoveVector += vector;
@@ -50,6 +58,10 @@ public class CameraManager : MonoBehaviour
         _rigidbody.AddRelativeForce(_cameraMoveSpeed * 10.0f * vector.normalized);
     }
 
+    /// <summary>
+    /// Adjusts the camera rig's angular velocity based on the provided parameter
+    /// </summary>
+    /// <param name="rotation"></param>
     private void UpdateCameraRotation(float rotation)
     {
         _cameraRotation += rotation;

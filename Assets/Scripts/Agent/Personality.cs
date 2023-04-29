@@ -113,8 +113,8 @@ public class Personality
     /// <returns>Float</returns>
     private float EvaluateEventVersusTrait(int eventValue, int traitValue)
     {
-        float traitFactor = (traitValue - Data.EVALUATION_FACTOR) * 0.01f;
-        float eventFactor = (eventValue - Data.EVALUATION_FACTOR) * 0.01f;
+        float traitFactor = (traitValue - Data.EVALUATION_FACTOR) * Data.EVALUATION_MULTIPLIER;
+        float eventFactor = (eventValue - Data.EVALUATION_FACTOR) * Data.EVALUATION_MULTIPLIER;
 
         return 1 + traitFactor + eventFactor;
     }

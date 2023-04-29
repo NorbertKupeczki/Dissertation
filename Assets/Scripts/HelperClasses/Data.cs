@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,11 +21,11 @@ namespace GeneralData
 
     public struct InteractionEvent
     {
-        public InteractionEvent(Vector3 position, InteractionDataSO @event, List<Agent> affectedAgents, float time, int eventId)
+        public InteractionEvent(Vector3 position, InteractionDataSO interactionData, List<Agent> affectedAgents, float time, int eventId)
 
         {
             Position = position;
-            Event = @event;
+            Event = interactionData;
             AffectedAgents = affectedAgents;
             Time = time;
             EventId = eventId;
@@ -37,7 +36,6 @@ namespace GeneralData
         public List<Agent> AffectedAgents { get; private set; }
         public float Time { get; private set; }
         public int EventId { get; private set; }
-    
     }
 
     public class Data
@@ -49,6 +47,7 @@ namespace GeneralData
 
         public const int EVALUATION_FACTOR = 50;
         public const int STARTING_PLAYER_RELATION = 50;
+        public const float EVALUATION_MULTIPLIER = 0.005f;
 
         public const int RELATIONSHIP_SCORE_MIN = 0;
         public const int RELATIONSHIP_SCORE_MAX = 100;

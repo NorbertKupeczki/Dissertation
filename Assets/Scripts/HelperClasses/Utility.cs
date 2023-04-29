@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Utility
 {
-    public class Utility
+    public static class Utility
     {
         public static Vector3 s_blenderRotation = new(-90.0f, 0.0f, 0.0f);
 
@@ -73,7 +73,7 @@ namespace Utility
         /// <returns>Int</returns>
         public static int GetRandomTrait()
         {
-            return (RollADice(5) + RollADice(5)) * 10 + RollADice(10);
+            return (RollADice(5) + RollADice(4)) * 10 + RollADice(10);
         }
 
         /// <summary>

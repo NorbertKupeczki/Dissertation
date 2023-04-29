@@ -18,17 +18,15 @@ public class AgentGenerator : MonoBehaviour
     
     private const int MAX_ROW = 3;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
+    // This function is to be called on button press to start the generation procedure.
     public void GenerateButtonInput()
     {
         GenerateAgents();
     }
 
+    /// <summary>
+    /// Generates a agents based on the data stored in this class.
+    /// </summary>
     private void GenerateAgents()
     {
         Vector3 startPosition = Vector3.zero;
@@ -52,6 +50,9 @@ public class AgentGenerator : MonoBehaviour
         InitialiseGossipModules();
     }
 
+    /// <summary>
+    /// Initialises the gossip module of all the agents.
+    /// </summary>
     private void InitialiseGossipModules()
     {
         foreach (Cluster cluster in _clusters)
@@ -63,6 +64,9 @@ public class AgentGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Initialises the generation of connections between agents who belong to the same clusters.
+    /// </summary>
     private void GenerateInterClusterConnections()
     {
         foreach (Cluster cluster in _clusters)
@@ -71,6 +75,12 @@ public class AgentGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Generates a cluster and fills it with agents.
+    /// </summary>
+    /// <param name="clusterPosition"></param>
+    /// <param name="index"></param>
+    /// <returns>Cluster</returns>
     private Cluster GenerateCluster(ref Vector3 clusterPosition, int index)
     {
         int numberOfAgents = Random.Range(_minNumberOfAgents, _maxNumberOfAgents + 1);
@@ -86,6 +96,12 @@ public class AgentGenerator : MonoBehaviour
         return scriptComponent;
     }
 
+    /// <summary>
+    /// Fills a cluster with random generated agents.
+    /// </summary>
+    /// <param name="cluster"></param>
+    /// <param name="numberOfAgents"></param>
+    /// <param name="clusterID"></param>
     private void FillClusterWithAgents(Cluster cluster, int numberOfAgents, int clusterID)
     {
         float clusterRadius = (2.0f * numberOfAgents) / (2 * Mathf.PI);

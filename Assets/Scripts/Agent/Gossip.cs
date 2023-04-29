@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using GeneralData;
 using UnityEngine;
@@ -9,36 +8,34 @@ public class Gossip : MonoBehaviour
     private List<Agent> _externalContacts = new();
     private int _totalContacts = 0;
     private InteractionsMemory _memory;
-    //private Agent _thisAgent;
 
     private float _clusterGossipCooldown;
     private float _externalGossipCooldown;
 
     private void Awake()
     {
-        //_thisAgent = GetComponent<Agent>();
-
         ResetClusterCooldown();
         ResetExternalCooldown();
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         UpdateGossipCooldowns();
     }
 
+    /// <summary>
+    /// Creates a reference to the agent's memory.
+    /// </summary>
+    /// <param name="memory"></param>
     public void SetLinkToMemory(InteractionsMemory memory)
     {
         _memory = memory;
     }
 
+    /// <summary>
+    /// Adds an agent to either the cluster or the external contact list based on the boolean parameter.
+    /// </summary>
+    /// <param name="contact"></param>
+    /// <param name="internalContact"></param>
     public void AddContactToList(Agent contact, bool internalContact)
     {
         if (internalContact)
@@ -68,6 +65,10 @@ public class Gossip : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Finds an event in the current agent's memory that hasn't been shared with the target,
+    /// if there is such an event, it is then shared with the target agent.
+    /// </summary>
     private void GossipOutsideCluster()
     {
         Agent contact = _externalContacts[Random.Range(0, _externalContacts.Count)];
@@ -77,16 +78,25 @@ public class Gossip : MonoBehaviour
         _memory.AddAgentToGossipList(eventData, contact);
     }
 
+    /// <summary>
+    /// Randomises the cluster gossip cooldown, resetting the countdown
+    /// </summary>
     private void ResetClusterCooldown()
     {
         _clusterGossipCooldown = Random.Range(GossipData.GOSSIP_DELAY_MIN, GossipData.GOSSIP_DELAY_MAX) * GossipData.GOSSIP_CLUSTER_TIME_MULTIPLIER;
     }
 
+    /// <summary>
+    /// Randomises the external gossip cooldown, resetting the countdown
+    /// </summary>
     private void ResetExternalCooldown()
     {
         _externalGossipCooldown = Random.Range(GossipData.GOSSIP_DELAY_MIN, GossipData.GOSSIP_DELAY_MAX);
     }
 
+    /// <summary>
+    /// Updates the countdowns, and executes the relevant actions when one of the countdowns reaches zero.
+    /// </summary>
     private void UpdateGossipCooldowns()
     {
         float deltaTime = Time.deltaTime;

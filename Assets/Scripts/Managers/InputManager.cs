@@ -14,16 +14,23 @@ public class InputManager : MonoBehaviour
         UpdateCameraControlsInput();
     }
 
+    /// <summary>
+    /// Returns the currently active agent.
+    /// </summary>
+    /// <returns></returns>
     public Agent GetSelectedAgent()
     {
         return _selectedAgent;
     }
 
+    /// <summary>
+    /// Updates the state of the mouse.
+    /// </summary>
     private void UpdateMouse()
     {
         PointerEventData eventData = new(EventSystem.current);
 
-        // If the mouse cursor is above a UI element at the time of click.
+        // If the mouse cursor is above a UI element at the time of clicking.
         if (IsMouseOverUi(eventData)) return;
 
         // Left mouse click
@@ -50,6 +57,9 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the keyboard inputs.
+    /// </summary>
     private void UpdateKeyboardInput()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -58,6 +68,9 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the camera control inputs.
+    /// </summary>
     private static void UpdateCameraControlsInput()
     {
         if (Input.GetKeyDown(KeyCode.A))
@@ -115,12 +128,20 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Invoke the event to deselect an agent.
+    /// </summary>
     private void DeselectAgent()
     {
         EventManager.OnDeselect();
         _selectedAgent = null;
     }
 
+    /// <summary>
+    /// Checks whether the pointer is over a UI element when a mouse button is pressed.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <returns>Bool</returns>
     private static bool IsMouseOverUi(PointerEventData eventData)
     {
         eventData.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -129,6 +150,10 @@ public class InputManager : MonoBehaviour
         return results.Count > 0;
     }
 
+    /// <summary>
+    /// Checks whether any mouse button has been pressed.
+    /// </summary>
+    /// <returns>Bool</returns>
     private static bool AnyMouseButtonClicked()
     {
         return Input.GetMouseButtonDown(InputData.LEFT_MOUSE_BUTTON) || 
@@ -136,6 +161,11 @@ public class InputManager : MonoBehaviour
                Input.GetMouseButtonDown(InputData.MIDDLE_MOUSE_BUTTON);
     }
 
+    /// <summary>
+    /// Checks whether an agent has been clicked on.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <returns>Agent</returns>
     private static Agent CheckAgentClicked(PointerEventData eventData)
     {
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
@@ -145,6 +175,12 @@ public class InputManager : MonoBehaviour
         return agent;
     }
 
+    /// <summary>
+    /// Checks whether the ground plane has been clicked.
+    /// </summary>
+    /// <param name="eventData"></param>
+    /// <param name="result"></param>
+    /// <returns>Bool</returns>
     private static bool CheckGroundHit(PointerEventData eventData, out Vector3 result)
     {
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
@@ -159,11 +195,17 @@ public class InputManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Invokes the positive area effect.
+    /// </summary>
     public void PositiveAreaEffect()
     {
         EventManager.OnPositiveAreaEffect();
     }
 
+    /// <summary>
+    /// Invokes the negative area effect.
+    /// </summary>
     public void NegativeAreaEffect()
     {
         EventManager.OnNegativeAreaEffect();

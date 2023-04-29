@@ -65,7 +65,7 @@ public class InteractionsMemory
     /// <returns>Bool</returns>
     public bool FindUntoldGossip(Agent agent, out InteractionEvent eventData)
     {
-        foreach (var element in _agentMemory)
+        foreach (KeyValuePair<InteractionEvent, List<Agent>> element in _agentMemory)
         {
             if (element.Value.Contains(agent)) continue;
             eventData = element.Key;

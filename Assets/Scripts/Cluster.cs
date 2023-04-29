@@ -111,8 +111,8 @@ public class Cluster : MonoBehaviour
     public void GenerateInterClusterConnections(List<Cluster> clusters)
     {
         int connections = 0;
-        Cluster currentCluster;
-        Agent currentAgent;
+        Cluster targetCluster;
+        Agent targetAgent;
 
         foreach (Agent member in _members)
         {
@@ -122,19 +122,19 @@ public class Cluster : MonoBehaviour
             for (int i = 0; i < connections; ++i)
             {
                 // 1. Pick a cluster different to this
-                currentCluster = PickRandomCluster(clusters);
+                targetCluster = PickRandomCluster(clusters);
                 // 2. Pick a random member
-                currentAgent = currentCluster.GetRandomMember();
+                targetAgent = targetCluster.GetRandomMember();
                 // 3. Check if this and the picked member are contacts already, if yes, skip
-                if (member.CheckContact(currentAgent)) continue;
+                if (member.CheckContact(targetAgent)) continue;
                 // 4. If not, make them contacts
-                MutuallyRegisterContacts(member, currentAgent);
+                MutuallyRegisterContacts(member, targetAgent);
             }
         }
     }
 
     /// <summary>
-    /// Picks a random cluster that is different from the caller from a List provided
+    /// Picks a random cluster from a List provided that is different from the caller
     /// </summary>
     /// <param name="clusters"></param>
     /// <returns>Cluster</returns>
